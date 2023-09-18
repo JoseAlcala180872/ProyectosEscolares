@@ -5,6 +5,7 @@
 package org.itson.sistema;
 
 import controlador.Conexion;
+import controlador.Consultas;
 
 /**
  *
@@ -15,5 +16,7 @@ public class ProyectoFinal {
     public static void main(String[] args) {
         Conexion conex=new Conexion();
         conex.getConexion();
+        Consultas con=new Consultas();
+        con.registrar("Mariana Meza", "mari@gmail.com", "1234");
     }
 }
