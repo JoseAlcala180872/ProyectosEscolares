@@ -20,6 +20,7 @@ public class frmEliminar extends javax.swing.JFrame {
      */
     public frmEliminar() {
         initComponents();
+        this.setTitle("Eliminar usuario");
     }
 
     /**

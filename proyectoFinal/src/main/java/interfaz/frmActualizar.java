@@ -20,6 +20,7 @@ public class frmActualizar extends javax.swing.JFrame {
      */
     public frmActualizar() {
         initComponents();
+        this.setTitle("Actualizar usuario");
     }
 
     /**
