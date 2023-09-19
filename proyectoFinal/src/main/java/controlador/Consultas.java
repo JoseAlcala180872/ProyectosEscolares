@@ -101,4 +101,60 @@ public class Consultas {
         }
         return false;
     }
+    
+    /**
+     * Metodo que actualiza los datos de un cliente de la base de datos.
+     * El método utiliza el nombre y apellidos, así como la contraseña para validar al cliente,
+     * una vez validado actualiza sus datos poniendo nuevos nombres y apellidos,
+     * correo y contraseña.
+     * @param Nombre_ApellidoP_ApellidoM nombre y apellidos del cliente.
+     * @param CorreoElectronico correo electronico del cliente.
+     * @param contraseña contraseña del cliente.
+     * @param nuevoNombre_ApellidoP_ApellidoM nombre y apellidos que se cambiará el clliente.
+     * @param nuevoCorreoElectronico correo electronico al que se cambiará el cliente.
+     * @param nuevaContraseña nueva contraseña a la que actualizará el cliente.
+     * @return TRUE: Actualizá los datos del cliente. FALSE: Despliega un mensaje de
+     * advertencia, ya sea que el metodo haya fallado o que el usuario haya añadido mal
+     * los datos necesarios para validar al cliente.
+     */
+    public boolean actualizar(String Nombre_ApellidoP_ApellidoM, String CorreoElectronico, String contraseña,
+            String nuevoNombre_ApellidoP_ApellidoM, String nuevoCorreoElectronico, String nuevaContraseña){
+        PreparedStatement pst = null;
+        
+        try{
+            String consulta = "UPDATE clientes SET Nombre_ApellidoP_ApellidoM=?, CorreoElectronico=?, Contraseña=? "
+                    + "WHERE Nombre_ApellidoP_ApellidoM=? AND contraseña=?";
+            pst = conex.getConexion().prepareCall(consulta);
+            pst.setString(1, nuevoNombre_ApellidoP_ApellidoM); //nombre y apellidos actualizados.
+            pst.setString(2, nuevoCorreoElectronico); //correo electronico actualizado.
+            pst.setString(3, nuevaContraseña); //contraseña actualizada.
+            pst.setString(4, Nombre_ApellidoP_ApellidoM); //nombre y apellidos que se utilizaron para la verificación de usuario.
+            pst.setString(5, contraseña); //contraseña que se utilizó para la verificación del usuario.
+            
+            int filasAfectadas = pst.executeUpdate();
+            
+            if(filasAfectadas == 1){
+                System.out.println("Se actualizó al cliente con exito");
+                System.out.println("su nuevo usuario es:");
+                System.out.println("nombre y apellido: " +nuevoNombre_ApellidoP_ApellidoM);
+                System.out.println("nuevo correo " +nuevoCorreoElectronico);
+                System.out.println("nueva contraseña: " +nuevaContraseña);
+                return true;
+            }else{
+                System.out.println("Hubo un error al actualizar al cliente");
+                System.out.println("Verifique haber añadido de forma correcta sus datos de usuario (nombre, apellido y contraseña)");
+            }
+            
+        }catch(Exception e){
+            System.out.println("Error en " +e);
+        }finally{
+            try{
+                if(pst != null) pst.close();
+            }catch(Exception e){
+                System.out.println("Error en " +e);
+            }
+        }
+        
+        return false;
+    }
 }
