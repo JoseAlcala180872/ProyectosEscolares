@@ -9,7 +9,7 @@ import java.sql.ResultSet;
  *
  * @author YeisiPC
  */
-public class Consultas {
+public class Consultas extends Conexion {
     
     public Consultas() {
     }
@@ -20,7 +20,7 @@ public class Consultas {
         try{
             String consulta="select * from clientes where CorreoElectronico=? and  Contraseña=?";
             System.out.println("Consulta es "+consulta);
-            pst=conex.getConexion().prepareStatement(consulta);
+            pst= getConexion().prepareStatement(consulta);
             pst.setString(1,CorreoElectronico);
             pst.setString(2, Contraseña);
             
@@ -34,8 +34,8 @@ public class Consultas {
             
         }finally{
             try{
-                if (conex.getConexion()!=null) 
-                    conex.getConexion().close();
+                if (getConexion()!=null) 
+                    getConexion().close();
                 if (pst!=null)pst.close(); 
                 if(rs!=null)rs.close();
                 
@@ -52,7 +52,7 @@ public class Consultas {
         PreparedStatement pst=null;
         try{
             String consulta="insert into clientes(Nombre_ApellidoP_ApellidoM, CorreoElectronico, Contraseña) values(?,?,?)";
-            pst=conex.getConexion().prepareStatement(consulta);
+            pst=getConexion().prepareStatement(consulta);
             pst.setString(1,Nombre_ApellidoP_ApellidoM);
             pst.setString(2, CorreoElectronico);
             pst.setString(3,Contraseña);
@@ -66,7 +66,7 @@ public class Consultas {
             System.out.println("Error en "+e);
         }finally{
             try{
-            if (conex.getConexion()!=null) conex.getConexion().close(); 
+            if (getConexion()!=null) conex.getConexion().close(); 
             if(pst!=null)pst.close();;
             }catch(Exception e){
                 System.out.println("Error en "+e);
@@ -81,7 +81,7 @@ public class Consultas {
         
         try{
             String consulta="delete from clientes where Nombre_ApellidoP_ApellidoM=? and Contraseña=?";
-            pst=conex.getConexion().prepareStatement(consulta);            
+            pst=getConexion().prepareStatement(consulta);            
             pst.setString(1,Nombre_ApellidoP_ApellidoM);
             pst.setString(2,Contraseña);
                                 
@@ -108,7 +108,6 @@ public class Consultas {
      * una vez validado actualiza sus datos poniendo nuevos nombres y apellidos,
      * correo y contraseña.
      * @param Nombre_ApellidoP_ApellidoM nombre y apellidos del cliente.
-     * @param CorreoElectronico correo electronico del cliente.
      * @param contraseña contraseña del cliente.
      * @param nuevoNombre_ApellidoP_ApellidoM nombre y apellidos que se cambiará el clliente.
      * @param nuevoCorreoElectronico correo electronico al que se cambiará el cliente.
@@ -117,14 +116,14 @@ public class Consultas {
      * advertencia, ya sea que el metodo haya fallado o que el usuario haya añadido mal
      * los datos necesarios para validar al cliente.
      */
-    public boolean actualizar(String Nombre_ApellidoP_ApellidoM, String CorreoElectronico, String contraseña,
+    public boolean actualizar(String Nombre_ApellidoP_ApellidoM, String contraseña,
             String nuevoNombre_ApellidoP_ApellidoM, String nuevoCorreoElectronico, String nuevaContraseña){
         PreparedStatement pst = null;
         
         try{
             String consulta = "UPDATE clientes SET Nombre_ApellidoP_ApellidoM=?, CorreoElectronico=?, Contraseña=? "
                     + "WHERE Nombre_ApellidoP_ApellidoM=? AND contraseña=?";
-            pst = conex.getConexion().prepareCall(consulta);
+            pst = getConexion().prepareCall(consulta);
             pst.setString(1, nuevoNombre_ApellidoP_ApellidoM); //nombre y apellidos actualizados.
             pst.setString(2, nuevoCorreoElectronico); //correo electronico actualizado.
             pst.setString(3, nuevaContraseña); //contraseña actualizada.
