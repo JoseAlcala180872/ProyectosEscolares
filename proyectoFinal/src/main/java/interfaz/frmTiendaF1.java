@@ -1,9 +1,12 @@
-
 package interfaz;
 
 import java.awt.Image;
 import java.awt.Toolkit;
 import javax.swing.ImageIcon;
+import entidades.Productos;
+import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
+import controlador.Consultas;
 
 /**
  *
@@ -19,10 +22,48 @@ public class frmTiendaF1 extends javax.swing.JFrame {
         this.setTitle("Tienda Merch Fórmula 1");
 //        Image icono = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("recursos/f1"));
 //        this.setIconImage(icono);
-        
+
 //        lblLogo.setIcon(new ImageIcon(icono.getScaledInstance(lblLogo.getWidth(), lblLogo.getHeight(), Image.SCALE_SMOOTH)));
         this.setSize(750, 700);
         this.setLocationRelativeTo(null);
+        // Llamar a la función getProductos y llenar el JComboBox
+        cargarProductosEnComboBox();
+
+    }
+    // Este método debe recuperar el precio del producto según su nombre.
+
+    private double obtenerPrecioDelProducto(String nombreProducto) {
+        Consultas consultas = new Consultas(); // Crea una instancia de la clase Consultas
+        ArrayList<Productos> listaProductos = consultas.getProductos(); // Obtén la lista de productos
+
+        // Itera a través de la lista de productos para encontrar el precio del producto seleccionado
+        for (Productos producto : listaProductos) {
+            if (producto.getNombreProducto().equals(nombreProducto)) {
+                return producto.getPrecio();
+            }
+        }
+
+        // Si el producto no se encuentra, devuelve 0.0 o maneja el error adecuadamente
+        return 0.0;
+    }
+
+    private void cargarProductosEnComboBox() {
+        Consultas consultas = new Consultas(); // Crear una instancia de la clase Consultas
+
+        try {
+            ArrayList<Productos> listaProductos = consultas.getProductos();
+            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+
+            // Llenar el modelo del JComboBox con los nombres de los productos
+            for (Productos producto : listaProductos) {
+                model.addElement(producto.getNombreProducto());
+            }
+
+            cboProducto.setModel(model);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Maneja la excepción apropiadamente
+        }
     }
 
     /**
@@ -76,6 +117,11 @@ public class frmTiendaF1 extends javax.swing.JFrame {
         cboProducto.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         cboProducto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cboProducto.setToolTipText("");
+        cboProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboProductoActionPerformed(evt);
+            }
+        });
 
         spnCantidad.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         spnCantidad.setToolTipText("");
@@ -162,8 +208,8 @@ public class frmTiendaF1 extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel4)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(cboProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(37, 37, 37)
+                                        .addComponent(cboProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel3))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel5)
@@ -222,6 +268,42 @@ public class frmTiendaF1 extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cboProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboProductoActionPerformed
+        int selectedIndex = cboProducto.getSelectedIndex(); // Obtiene el índice seleccionado
+
+        if (selectedIndex != -1) {
+            // Obtiene el nombre del producto seleccionado
+            String selectedProductName = (String) cboProducto.getSelectedItem();
+
+            // Obtiene el precio del producto por su nombre
+            double selectedProductPrice = obtenerPrecioDelProducto(selectedProductName);
+
+            // Actualiza la etiqueta lblPrecio con el precio del producto
+            lblPrecio.setText("$ " + selectedProductPrice + " MXN");
+        }
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+
+        System.out.println("Evento cboProductoActionPerformed activado.");
+
+        try {
+            // Consulta y obtiene la lista de productos
+            Consultas consultas = new Consultas();
+            ArrayList<Productos> listaProductos = consultas.getProductos();
+
+            // Llenar el modelo del JComboBox con los nombres de los productos
+            for (Productos producto : listaProductos) {
+                model.addElement(producto.getNombreProducto());
+            }
+
+            // Actualiza el modelo del JComboBox
+            cboProducto.setModel(model);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Maneja la excepción apropiadamente
+        }
+
+    }//GEN-LAST:event_cboProductoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -236,16 +318,24 @@ public class frmTiendaF1 extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmTiendaF1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmTiendaF1.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmTiendaF1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmTiendaF1.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmTiendaF1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmTiendaF1.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmTiendaF1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmTiendaF1.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
