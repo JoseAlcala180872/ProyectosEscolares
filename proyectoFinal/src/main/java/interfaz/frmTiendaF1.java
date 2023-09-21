@@ -13,6 +13,8 @@ import controlador.Consultas;
  * @author Danny Castro
  */
 public class frmTiendaF1 extends javax.swing.JFrame {
+    double precio=0;
+    int cantidad=0;
 
     /**
      * Creates new form frmTiendaF1
@@ -125,6 +127,11 @@ public class frmTiendaF1 extends javax.swing.JFrame {
 
         spnCantidad.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         spnCantidad.setToolTipText("");
+        spnCantidad.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spnCantidadStateChanged(evt);
+            }
+        });
 
         tblProductos.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         tblProductos.setModel(new javax.swing.table.DefaultTableModel(
@@ -282,8 +289,7 @@ public class frmTiendaF1 extends javax.swing.JFrame {
             lblPrecio.setText("$ " + selectedProductPrice + " MXN");
         }
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-
-        System.out.println("Evento cboProductoActionPerformed activado.");
+        
 
         try {
             // Consulta y obtiene la lista de productos
@@ -303,6 +309,10 @@ public class frmTiendaF1 extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_cboProductoActionPerformed
+
+    private void spnCantidadStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spnCantidadStateChanged
+        
+    }//GEN-LAST:event_spnCantidadStateChanged
 
     /**
      * @param args the command line arguments
