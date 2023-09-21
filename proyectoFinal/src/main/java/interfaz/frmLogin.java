@@ -155,8 +155,17 @@ public class frmLogin extends javax.swing.JFrame {
      * @param evt autentica al usuario e inicia sesión.
      */
     private void btnIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSesionActionPerformed
-        Consultas sql = new Consultas();
-        sql.autenticacion(campotxtCorreo.getText(), campotxtContraseña.getText());
+//        Consultas sql = new Consultas();
+//        do {            
+//            sql.autenticacion(campotxtCorreo.getText(), campotxtContraseña.getText());
+//            frmTiendaF1 f1=new frmTiendaF1();
+//            this.setVisible(false);
+//            f1.setVisible(true);
+//        } while (sql.autenticacion(campotxtCorreo.getText(), campotxtContraseña.getText())==true);
+//        if (campotxtCorreo.getText().isBlank()||campotxtContraseña.getText().isBlank()) {
+//            
+//        }
+        
     }//GEN-LAST:event_btnIniciarSesionActionPerformed
 
     /**
