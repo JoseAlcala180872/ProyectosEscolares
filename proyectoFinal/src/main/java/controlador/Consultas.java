@@ -4,8 +4,10 @@
  */
 package controlador;
 
+import entidades.Compras;
 import entidades.Productos;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -233,4 +235,53 @@ public class Consultas extends Conexion {
         return listaProductos;
     }
 
+    public boolean insertarCompraEnTieneCarrito(int compraID, int productoID) {
+        try (Connection conexion = getConexion(); PreparedStatement statement = conexion.prepareStatement("INSERT INTO TieneCarrito (Estado, CompraID, ID_Producto) VALUES (?, ?, ?)")) {
+
+            statement.setString(1, "Pendiente"); // Cambia el estado según tus necesidades
+            statement.setInt(2, compraID);
+            statement.setInt(3, productoID);
+
+            int filasAfectadas = statement.executeUpdate();
+
+            return filasAfectadas == 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Maneja la excepción apropiadamente
+        }
+
+        return false;
+    }
+// Función para insertar un registro en la tabla TieneCarrito
+
+    private boolean insertarEnTieneCarrito(int clienteID, int productoID, int cantidad) {
+        String estado = "Agregado"; // Definir el estado apropiado
+
+        try {
+            Connection conexion = getConexion(); // Reemplaza con tu lógica para obtener la conexión a la base de datos
+            String sql = "INSERT INTO TieneCarrito (Estado, CompraID, ID_Producto) VALUES (?, ?, ?)";
+
+            PreparedStatement statement = conexion.prepareStatement(sql);
+            statement.setString(1, estado);
+            statement.setInt(2, clienteID);
+            statement.setInt(3, productoID);
+
+            // Ejecutar la inserción
+            int filasAfectadas = statement.executeUpdate();
+
+            // Cerrar la conexión
+            statement.close();
+            conexion.close();
+
+            // Devolver true si se insertó correctamente
+            return filasAfectadas > 0;
+        } catch (SQLException e) {
+            // Manejar cualquier excepción de SQL aquí
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+ 
 }

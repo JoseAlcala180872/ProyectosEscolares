@@ -7,14 +7,22 @@ import entidades.Productos;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import controlador.Consultas;
+import entidades.TieneCarrito;
+import entidades.Compras;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import javax.swing.JOptionPane;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Danny Castro
  */
 public class frmTiendaF1 extends javax.swing.JFrame {
-    double precio=0;
-    int cantidad=0;
+
+    double precio = 0;
+    int cantidad = 0;
 
     /**
      * Creates new form frmTiendaF1
@@ -65,6 +73,9 @@ public class frmTiendaF1 extends javax.swing.JFrame {
         } catch (Exception e) {
             e.printStackTrace();
             // Maneja la excepción apropiadamente
+            // Configurar el modelo del JSpinner para tener un valor mínimo de 0
+            SpinnerNumberModel spinnerModel = new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1);
+            spnCantidad.setModel(spinnerModel);
         }
     }
 
@@ -96,6 +107,7 @@ public class frmTiendaF1 extends javax.swing.JFrame {
         lblImporte = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         btnRegresar = new javax.swing.JButton();
+        botonConfirmarCompra = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -116,6 +128,11 @@ public class frmTiendaF1 extends javax.swing.JFrame {
         jLabel5.setToolTipText("");
 
         btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
         cboProducto.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         cboProducto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -197,13 +214,20 @@ public class frmTiendaF1 extends javax.swing.JFrame {
             }
         });
 
+        botonConfirmarCompra.setText("Confirmar");
+        botonConfirmarCompra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonConfirmarCompraActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(48, 48, 48)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -215,7 +239,7 @@ public class frmTiendaF1 extends javax.swing.JFrame {
                                             .addComponent(jLabel12)))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(btnRegresar)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 455, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 584, Short.MAX_VALUE)
                                         .addComponent(jLabel13)))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -242,21 +266,26 @@ public class frmTiendaF1 extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblImporte)
                                     .addComponent(lblPrecio))
-                                .addGap(55, 55, 55)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnAgregar))))
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(botonConfirmarCompra, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(17, 17, 17))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(35, 35, 35)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 675, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 789, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(61, 61, 61))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addComponent(jLabel1)
-                .addGap(35, 35, 35)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addComponent(jLabel1)
+                        .addGap(35, 35, 35)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cboProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4)
@@ -266,9 +295,11 @@ public class frmTiendaF1 extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(jLabel5)
-                            .addComponent(spnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblImporte)))
-                    .addComponent(btnAgregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(lblImporte)
+                            .addComponent(spnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(113, 113, 113)
+                        .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -284,7 +315,9 @@ public class frmTiendaF1 extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
                     .addComponent(lblTotal))
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addComponent(botonConfirmarCompra, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         pack();
@@ -300,40 +333,80 @@ public class frmTiendaF1 extends javax.swing.JFrame {
             // Obtiene el precio del producto por su nombre
             double selectedProductPrice = obtenerPrecioDelProducto(selectedProductName);
 
-            // Actualiza la etiqueta lblPrecio con el precio del producto
-            lblPrecio.setText("$ " + selectedProductPrice + " MXN");
+            // Obtiene la cantidad del JSpinner
+            int selectedQuantity = (int) spnCantidad.getValue();
+
+            // Calcula el importe multiplicando el precio por la cantidad
+            double importe = selectedProductPrice * selectedQuantity;
+
+            // Formatea los valores con dos decimales
+            DecimalFormat decimalFormat = new DecimalFormat("0.00");
+            String formattedPrice = decimalFormat.format(selectedProductPrice);
+            String formattedImporte = decimalFormat.format(importe);
+
+            // Actualiza la etiqueta lblPrecio con el precio del producto formateado
+            lblPrecio.setText("$ " + formattedPrice + " MXN");
+
+            // Actualiza la etiqueta lblImporte con el importe calculado y formateado
+            lblImporte.setText("$ " + formattedImporte + " MXN");
+
+            // Reinicia el JSpinner a 0
+            spnCantidad.setValue(0);
+
         }
-        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-        
 
-        try {
-            // Consulta y obtiene la lista de productos
-            Consultas consultas = new Consultas();
-            ArrayList<Productos> listaProductos = consultas.getProductos();
-
-            // Llenar el modelo del JComboBox con los nombres de los productos
-            for (Productos producto : listaProductos) {
-                model.addElement(producto.getNombreProducto());
-            }
-
-            // Actualiza el modelo del JComboBox
-            cboProducto.setModel(model);
-        } catch (Exception e) {
-            e.printStackTrace();
-            // Maneja la excepción apropiadamente
-        }
 
     }//GEN-LAST:event_cboProductoActionPerformed
 
     private void spnCantidadStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spnCantidadStateChanged
-        
+
+        int selectedIndex = cboProducto.getSelectedIndex(); // Obtiene el índice seleccionado
+
+        if (selectedIndex != -1) {
+            // Obtiene el nombre del producto seleccionado
+            String selectedProductName = (String) cboProducto.getSelectedItem();
+
+            // Obtiene el precio del producto por su nombre
+            double selectedProductPrice = obtenerPrecioDelProducto(selectedProductName);
+
+            // Obtiene la cantidad del JSpinner
+            int selectedQuantity = (int) spnCantidad.getValue();
+
+            // Calcula el importe multiplicando el precio por la cantidad
+            double importe = selectedProductPrice * selectedQuantity;
+
+            // Formatea los valores con dos decimales
+            DecimalFormat decimalFormat = new DecimalFormat("0.00");
+            String formattedPrice = decimalFormat.format(selectedProductPrice);
+            String formattedImporte = decimalFormat.format(importe);
+
+            // Actualiza la etiqueta lblPrecio con el precio del producto formateado
+            lblPrecio.setText("$ " + formattedPrice + " MXN");
+
+            // Actualiza la etiqueta lblImporte con el importe calculado y formateado
+            lblImporte.setText("$ " + formattedImporte + " MXN");
+            // Evita valores negativos en el JSpinner
+            if (selectedQuantity < 0) {
+                spnCantidad.setValue(0);
+                selectedQuantity = 0;
+            }
+        }
     }//GEN-LAST:event_spnCantidadStateChanged
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
-        frmLogin login=new frmLogin();
+        frmLogin login = new frmLogin();
         login.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+
+
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void botonConfirmarCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonConfirmarCompraActionPerformed
+
+    }//GEN-LAST:event_botonConfirmarCompraActionPerformed
 
     /**
      * @param args the command line arguments
@@ -379,6 +452,7 @@ public class frmTiendaF1 extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton botonConfirmarCompra;
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnRegresar;
     private javax.swing.JComboBox<String> cboProducto;
