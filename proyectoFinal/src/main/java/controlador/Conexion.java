@@ -12,7 +12,7 @@ import java.sql.SQLException;
  */
 public class Conexion {
     private String USERNAME="root";
-    private String PASSWORD=" ";
+    private String PASSWORD="";
     private String HOST="localhost";
     private String PORT="3306";
     private String DATABASE="tienda";

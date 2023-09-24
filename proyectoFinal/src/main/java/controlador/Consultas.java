@@ -283,7 +283,7 @@ public class Consultas extends Conexion {
 
     }
     
-    public boolean registrarCarrito( int ID_Producto, int cantidadProductos,String importe ) {
+    public boolean registrarCarrito(int ID_Producto, int cantidadProductos, String importe) {
         PreparedStatement pst = null;
         try {
             String consulta = "insert into tienecarrito(ID_Producto, cantidadProductos, importe) values(?,?,?)";
@@ -313,6 +313,34 @@ public class Consultas extends Conexion {
         }
         return false;
     }
+    public boolean registrarCompra(int idCliente, int idCarrito, String montoTotal){
+        PreparedStatement pst = null;
+        try {
+            String consulta = "insert into compras(ID_cliente, idCarrito, montoTotal) values(?,?,?)";
+            pst = getConexion().prepareStatement(consulta);
+            pst.setInt(1, idCliente);
+            pst.setInt(2, idCarrito);
+            pst.setString(3, montoTotal);
 
- 
+            if (pst.executeUpdate() == 1) {
+                return true;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error en " + e);
+        } finally {
+            try {
+                if (getConexion() != null) {
+                    conex.getConexion().close();
+                }
+                if (pst != null) {
+                    pst.close();
+                };
+            } catch (Exception e) {
+                System.out.println("Error en " + e);
+            }
+
+        }
+        return false;
+    }
 }

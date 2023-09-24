@@ -1,5 +1,6 @@
 package interfaz;
 
+import controlador.Conexion;
 import java.awt.Image;
 import java.awt.Toolkit;
 import javax.swing.ImageIcon;
@@ -9,9 +10,16 @@ import javax.swing.DefaultComboBoxModel;
 import controlador.Consultas;
 import entidades.TieneCarrito;
 import entidades.Compras;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableModel;
 
@@ -38,7 +46,68 @@ public class frmTiendaF1 extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         // Llamar a la función getProductos y llenar el JComboBox
         cargarProductosEnComboBox();
+    }
 
+    private void mostrar() {
+        // Supongamos que comboBoxProductos contiene los nombres de los productos y sus IDs corresponden al índice en el JComboBox.
+
+        // Obtén el ID del producto seleccionado del JComboBox.
+        int selectedProductID = cboProducto.getSelectedIndex(); // Asumiendo que los IDs son los índices.
+
+        // Obtén la cantidad ingresada por el usuario desde un Jspinner.
+        int selectedQuantity = (int) spnCantidad.getValue();
+
+        if (selectedProductID >= 0 && selectedQuantity > 0) {
+            // Crear un modelo de tabla si aún no lo has hecho.
+            DefaultTableModel tableModel = new DefaultTableModel();
+
+            // Si ya tienes datos en la tabla, puedes obtenerlos y agregarlos al modelo existente.
+            if (tblProductos.getModel() instanceof DefaultTableModel) {
+                tableModel = (DefaultTableModel) tblProductos.getModel();
+            } else {
+                // Si la tabla aún no tiene un modelo, asigna el nuevo modelo.
+                // Agregar las columnas a la tabla
+                tableModel.addColumn("ID Producto");
+                tableModel.addColumn("Nombre Producto");
+                tableModel.addColumn("Descripción");
+                tableModel.addColumn("Cantidad Productos");
+                tableModel.addColumn("Precio");
+            }
+
+            // Ahora, puedes agregar la fila correspondiente al producto seleccionado y la cantidad ingresada.
+            // Debes realizar una consulta para obtener los datos del producto desde la base de datos.
+            try {
+                Conexion con = new Conexion();
+                Connection conexion = con.getConexion();
+                Statement statement = conexion.createStatement();
+
+                String query = "SELECT p.ID_Producto, p.NombreProducto, p.Descripcion, c.cantidadProductos, c.importe "
+                        + "FROM productos p "
+                        + "JOIN tienecarrito c ON p.ID_Producto = c.ID_Producto "
+                        + "WHERE p.ID_Producto = " + selectedProductID;
+                ResultSet resultSet = statement.executeQuery(query);
+
+                if (resultSet.next()) {
+                    Object[] row = {
+                        selectedProductID,
+                        resultSet.getString("NombreProducto"),
+                        resultSet.getString("Descripcion"),
+                        selectedQuantity, // Usar la cantidad ingresada en lugar de la de la base de datos.
+                        resultSet.getDouble("importe")
+                    };
+                    tableModel.insertRow(0, row);
+                } else {
+                    // Si no se encontraron registros, puedes mostrar un mensaje o realizar alguna otra acción.
+                    JOptionPane.showMessageDialog(this, "No se encontraron registros para el producto seleccionado.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            // Asigna el modelo de tabla al JTable.
+            tblProductos.setModel(tableModel);
+        }
     }
     // Este método debe recuperar el precio del producto según su nombre.
 
@@ -154,21 +223,42 @@ public class frmTiendaF1 extends javax.swing.JFrame {
         tblProductos.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         tblProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID Producto", "Nombre Producto", "Descripcion", "Cantidad", "Precio"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tblProductos.setToolTipText("");
+        tblProductos.addContainerListener(new java.awt.event.ContainerAdapter() {
+            public void componentAdded(java.awt.event.ContainerEvent evt) {
+                tblProductosComponentAdded(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblProductos);
 
         lblPrecio.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblPrecio.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblPrecio.setText("$ 0.0 MXN");
+        lblPrecio.setText("$ 0.00 MXN");
         lblPrecio.setToolTipText("");
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -177,17 +267,17 @@ public class frmTiendaF1 extends javax.swing.JFrame {
 
         lblSubtotal.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblSubtotal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblSubtotal.setText("$ 0.0 MXN");
+        lblSubtotal.setText("$ 0.00 MXN");
         lblSubtotal.setToolTipText("");
 
         lblTotal.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblTotal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblTotal.setText("$ 0.0 MXN");
+        lblTotal.setText("$ 0.00 MXN");
         lblTotal.setToolTipText("");
 
         lblIva.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblIva.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblIva.setText("$ 0.0 MXN");
+        lblIva.setText("$ 0.00 MXN");
         lblIva.setToolTipText("");
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -200,7 +290,7 @@ public class frmTiendaF1 extends javax.swing.JFrame {
 
         lblImporte.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblImporte.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblImporte.setText("$ 0.0 MXN");
+        lblImporte.setText("$ 0.00 MXN");
         lblImporte.setToolTipText("");
 
         jLabel1.setFont(new java.awt.Font("Arial Black", 1, 36)); // NOI18N
@@ -239,7 +329,7 @@ public class frmTiendaF1 extends javax.swing.JFrame {
                                             .addComponent(jLabel12)))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(btnRegresar)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 584, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 574, Short.MAX_VALUE)
                                         .addComponent(jLabel13)))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -339,16 +429,23 @@ public class frmTiendaF1 extends javax.swing.JFrame {
             // Calcula el importe multiplicando el precio por la cantidad
             double importe = selectedProductPrice * selectedQuantity;
 
+            // Calcula el iva obteniendo el 16% del importe.
+            double iva = importe * 0.16;
+
+            // Calcula el total sumando el Iva y el Subtotal.
+            double total = importe + iva;
+
             // Formatea los valores con dos decimales
             DecimalFormat decimalFormat = new DecimalFormat("0.00");
-            String formattedPrice = decimalFormat.format(selectedProductPrice);
-            String formattedImporte = decimalFormat.format(importe);
+            String formattedImporte = "$ " + decimalFormat.format(importe) + " MXN";
+            String formattedIva = "$ " + decimalFormat.format(iva) + " MXN";
+            String formattedTotal = "$ " + decimalFormat.format(total) + " MXN";
 
-            // Actualiza la etiqueta lblPrecio con el precio del producto formateado
-            lblPrecio.setText("$ " + formattedPrice + " MXN");
-
-            // Actualiza la etiqueta lblImporte con el importe calculado y formateado
-            lblImporte.setText("$ " + formattedImporte + " MXN");
+            // Actualiza las etiquetas
+            lblImporte.setText(formattedImporte);
+            lblIva.setText(formattedIva);
+            lblSubtotal.setText(formattedImporte);
+            lblTotal.setText(formattedTotal);
 
             // Reinicia el JSpinner a 0
             spnCantidad.setValue(0);
@@ -375,16 +472,28 @@ public class frmTiendaF1 extends javax.swing.JFrame {
             // Calcula el importe multiplicando el precio por la cantidad
             double importe = selectedProductPrice * selectedQuantity;
 
+            // Calcula el iva obteniendo el 16% del importe.
+            double iva = importe * 0.16;
+
+            // Calcula el total sumando el Iva y el Subtotal.
+            double total = importe + iva;
+
             // Formatea los valores con dos decimales
             DecimalFormat decimalFormat = new DecimalFormat("0.00");
             String formattedPrice = decimalFormat.format(selectedProductPrice);
             String formattedImporte = decimalFormat.format(importe);
-
+            String formattedIva = "$ " + decimalFormat.format(iva) + " MXN";
+            String formattedTotal = "$ " + decimalFormat.format(total) + " MXN";
             // Actualiza la etiqueta lblPrecio con el precio del producto formateado
             lblPrecio.setText("$ " + formattedPrice + " MXN");
 
             // Actualiza la etiqueta lblImporte con el importe calculado y formateado
             lblImporte.setText("$ " + formattedImporte + " MXN");
+
+            lblIva.setText(formattedIva);
+            lblSubtotal.setText("$ " + formattedImporte + " MXN"); // Aquí puedes usar el mismo valor que lblImporte
+            lblTotal.setText(formattedTotal);
+
             // Evita valores negativos en el JSpinner
             if (selectedQuantity < 0) {
                 spnCantidad.setValue(0);
@@ -398,7 +507,7 @@ public class frmTiendaF1 extends javax.swing.JFrame {
         login.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegresarActionPerformed
-       private int obtenerIDProductoPorNombre(String nombreProducto) {
+    private int obtenerIDProductoPorNombre(String nombreProducto) {
         Consultas consultas = new Consultas(); // Crea una instancia de la clase Consultas
         ArrayList<Productos> listaProductos = consultas.getProductos(); // Obtén la lista de productos
 
@@ -412,14 +521,14 @@ public class frmTiendaF1 extends javax.swing.JFrame {
         // Si el producto no se encuentra, devuelve -1 o maneja el error adecuadamente
         return -1;
     }
-    
+
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         int selectedIndex = cboProducto.getSelectedIndex(); // Obtiene el índice seleccionado
 
         if (selectedIndex != -1) {
             // Obtiene el nombre del producto seleccionado
             String selectedProductName = (String) cboProducto.getSelectedItem();
-            int selectedProductID= obtenerIDProductoPorNombre(selectedProductName);
+            int selectedProductID = obtenerIDProductoPorNombre(selectedProductName);
             // Obtiene el precio del producto por su nombre
             double selectedProductPrice = obtenerPrecioDelProducto(selectedProductName);
 
@@ -444,18 +553,22 @@ public class frmTiendaF1 extends javax.swing.JFrame {
                 spnCantidad.setValue(0);
                 selectedQuantity = 0;
             }
-            Consultas con=new Consultas();
+            Consultas con = new Consultas();
             con.registrarCarrito(selectedProductID, selectedQuantity, formattedImporte);
-            
+
+            mostrar();
         }
-        
-        
+
 
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void botonConfirmarCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonConfirmarCompraActionPerformed
 
     }//GEN-LAST:event_botonConfirmarCompraActionPerformed
+
+    private void tblProductosComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_tblProductosComponentAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblProductosComponentAdded
 
     /**
      * @param args the command line arguments
