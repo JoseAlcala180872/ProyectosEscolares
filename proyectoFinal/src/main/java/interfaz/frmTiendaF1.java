@@ -34,7 +34,7 @@ public class frmTiendaF1 extends javax.swing.JFrame {
 //        this.setIconImage(icono);
 
 //        lblLogo.setIcon(new ImageIcon(icono.getScaledInstance(lblLogo.getWidth(), lblLogo.getHeight(), Image.SCALE_SMOOTH)));
-        this.setSize(750, 700);
+        this.setSize(1920, 1080);
         this.setLocationRelativeTo(null);
         // Llamar a la función getProductos y llenar el JComboBox
         cargarProductosEnComboBox();
@@ -398,19 +398,19 @@ public class frmTiendaF1 extends javax.swing.JFrame {
         login.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegresarActionPerformed
-        private double obtenerID_Producto(String ID_Producto) {
+       private int obtenerIDProductoPorNombre(String nombreProducto) {
         Consultas consultas = new Consultas(); // Crea una instancia de la clase Consultas
         ArrayList<Productos> listaProductos = consultas.getProductos(); // Obtén la lista de productos
 
-        // Itera a través de la lista de productos para encontrar el precio del producto seleccionado
+        // Itera a través de la lista de productos para encontrar el ID_Producto del producto seleccionado
         for (Productos producto : listaProductos) {
             if (producto.getNombreProducto().equals(nombreProducto)) {
-                return producto.getPrecio();
+                return producto.getID_Producto();
             }
         }
 
-        // Si el producto no se encuentra, devuelve 0.0 o maneja el error adecuadamente
-        return 0.0;
+        // Si el producto no se encuentra, devuelve -1 o maneja el error adecuadamente
+        return -1;
     }
     
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
@@ -419,7 +419,7 @@ public class frmTiendaF1 extends javax.swing.JFrame {
         if (selectedIndex != -1) {
             // Obtiene el nombre del producto seleccionado
             String selectedProductName = (String) cboProducto.getSelectedItem();
-
+            int selectedProductID= obtenerIDProductoPorNombre(selectedProductName);
             // Obtiene el precio del producto por su nombre
             double selectedProductPrice = obtenerPrecioDelProducto(selectedProductName);
 
@@ -444,10 +444,12 @@ public class frmTiendaF1 extends javax.swing.JFrame {
                 spnCantidad.setValue(0);
                 selectedQuantity = 0;
             }
+            Consultas con=new Consultas();
+            con.registrarCarrito(selectedProductID, selectedQuantity, formattedImporte);
+            
         }
         
-        Consultas con=new Consultas();
-        con.registrarCarrito(HIDE_ON_CLOSE, cantidad, precio);
+        
 
     }//GEN-LAST:event_btnAgregarActionPerformed
 

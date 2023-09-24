@@ -283,14 +283,14 @@ public class Consultas extends Conexion {
 
     }
     
-    public boolean registrarCarrito( int ID_Producto, int cantidadProductos,double importe ) {
+    public boolean registrarCarrito( int ID_Producto, int cantidadProductos,String importe ) {
         PreparedStatement pst = null;
         try {
             String consulta = "insert into tienecarrito(ID_Producto, cantidadProductos, importe) values(?,?,?)";
             pst = getConexion().prepareStatement(consulta);
             pst.setInt(1, ID_Producto);
             pst.setInt(2, cantidadProductos);
-            pst.setDouble(3, importe);
+            pst.setString(3, importe);
 
             if (pst.executeUpdate() == 1) {
                 return true;
