@@ -398,9 +398,56 @@ public class frmTiendaF1 extends javax.swing.JFrame {
         login.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegresarActionPerformed
+        private double obtenerID_Producto(String ID_Producto) {
+        Consultas consultas = new Consultas(); // Crea una instancia de la clase Consultas
+        ArrayList<Productos> listaProductos = consultas.getProductos(); // Obtén la lista de productos
 
+        // Itera a través de la lista de productos para encontrar el precio del producto seleccionado
+        for (Productos producto : listaProductos) {
+            if (producto.getNombreProducto().equals(nombreProducto)) {
+                return producto.getPrecio();
+            }
+        }
+
+        // Si el producto no se encuentra, devuelve 0.0 o maneja el error adecuadamente
+        return 0.0;
+    }
+    
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        int selectedIndex = cboProducto.getSelectedIndex(); // Obtiene el índice seleccionado
 
+        if (selectedIndex != -1) {
+            // Obtiene el nombre del producto seleccionado
+            String selectedProductName = (String) cboProducto.getSelectedItem();
+
+            // Obtiene el precio del producto por su nombre
+            double selectedProductPrice = obtenerPrecioDelProducto(selectedProductName);
+
+            // Obtiene la cantidad del JSpinner
+            int selectedQuantity = (int) spnCantidad.getValue();
+
+            // Calcula el importe multiplicando el precio por la cantidad
+            double importe = selectedProductPrice * selectedQuantity;
+
+            // Formatea los valores con dos decimales
+            DecimalFormat decimalFormat = new DecimalFormat("0.00");
+            String formattedPrice = decimalFormat.format(selectedProductPrice);
+            String formattedImporte = decimalFormat.format(importe);
+
+            // Actualiza la etiqueta lblPrecio con el precio del producto formateado
+            lblPrecio.setText("$ " + formattedPrice + " MXN");
+
+            // Actualiza la etiqueta lblImporte con el importe calculado y formateado
+            lblImporte.setText("$ " + formattedImporte + " MXN");
+            // Evita valores negativos en el JSpinner
+            if (selectedQuantity < 0) {
+                spnCantidad.setValue(0);
+                selectedQuantity = 0;
+            }
+        }
+        
+        Consultas con=new Consultas();
+        con.registrarCarrito(HIDE_ON_CLOSE, cantidad, precio);
 
     }//GEN-LAST:event_btnAgregarActionPerformed
 

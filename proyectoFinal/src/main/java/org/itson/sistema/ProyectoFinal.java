@@ -21,7 +21,7 @@ public class ProyectoFinal {
         //con.registrar("Mariana Meza", "mari@gmail.com", "1234");
         //con.actualizar("Mariana Meza Echaverria", "mari3@gmail.com", "123456", "Mariana Meza Padilla", "mari@gmail.com", "asd");
         //con.autenticacion("carlos@gmail.com", "asd");
-        //frmLogin login = new frmLogin();
-        //login.setVisible(true);
+        frmLogin login = new frmLogin();
+        login.setVisible(true);
     }
 }
