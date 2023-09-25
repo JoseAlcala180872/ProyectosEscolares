@@ -1,15 +1,18 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+/**
+ * Este frame frmRegistrar.java registra a un cliente con los 
+ * parametros otorgados por el usuario;
+ * 
+ * Fecha de terminación y ult. versión: 24 de Septiembre de 2023, 23:30 hrs.
  */
 package interfaz;
 
 import controlador.Consultas;
 
 /**
- *
- * @author TADEO
- * Este frame registra a un cliente con los parametros otorgados por el usuario.
+ * @author(s) Jesús Yalam Guzmán Villa 233350, 
+ * Daniel Alejandro Castro Félix 235294, 
+ * José Carlos Alcalá Ruíz 180872, 
+ * Fernando Tadeo Zayas Bernal 228310.
  */
 public class frmRegistrar extends javax.swing.JFrame {
 

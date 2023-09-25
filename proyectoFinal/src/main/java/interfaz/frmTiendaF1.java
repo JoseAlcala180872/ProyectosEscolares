@@ -1,3 +1,10 @@
+/**
+ * La clase frmTiendaF1.java es una ventana de la aplicación que
+ * representa una tienda de productos relacionados con Fórmula 1;
+ * Permite al usuario seleccionar y comprar productos de Fórmula 1.
+ *
+ * Fecha de terminación y ult. versión: 24 de Septiembre de 2023, 23:30 hrs.
+ */
 package interfaz;
 
 import controlador.Conexion;
@@ -24,8 +31,10 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
- * @author Danny Castro
+ * @author(s) Jesús Yalam Guzmán Villa 233350, 
+ * Daniel Alejandro Castro Félix 235294, 
+ * José Carlos Alcalá Ruíz 180872, 
+ * Fernando Tadeo Zayas Bernal 228310.
  */
 public class frmTiendaF1 extends javax.swing.JFrame {
 
@@ -33,7 +42,8 @@ public class frmTiendaF1 extends javax.swing.JFrame {
     int cantidad = 0;
 
     /**
-     * Creates new form frmTiendaF1
+     * Crea el formulario o frame de iniciar sesión, también le establece un
+     * título.
      */
     public frmTiendaF1() {
         initComponents();
@@ -48,6 +58,16 @@ public class frmTiendaF1 extends javax.swing.JFrame {
         cargarProductosEnComboBox();
     }
 
+    /**
+     * El método mostrar() se encarga de agregar un producto al carrito de
+     * compras y mostrarlo en una tabla; Se obtiene el ID del producto
+     * seleccionado desde un JComboBox y la cantidad ingresada desde un
+     * JSpinner; Luego se realiza una consulta para obtener los detalles del
+     * producto y se muestra en la tabla.
+     *
+     * @see Conexion
+     * @see Consultas
+     */
     private void mostrar() {
         // Supongamos que comboBoxProductos contiene los nombres de los productos y sus IDs corresponden al índice en el JComboBox.
 
@@ -98,7 +118,7 @@ public class frmTiendaF1 extends javax.swing.JFrame {
                     tableModel.insertRow(0, row);
                 } else {
                     // Si no se encontraron registros, puedes mostrar un mensaje o realizar alguna otra acción.
-                    JOptionPane.showMessageDialog(this, "No se encontraron registros para el producto seleccionado.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "No se encontraron registros para el producto seleccionado, por favor intente de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
 
             } catch (SQLException e) {
@@ -109,8 +129,16 @@ public class frmTiendaF1 extends javax.swing.JFrame {
             tblProductos.setModel(tableModel);
         }
     }
-    // Este método debe recuperar el precio del producto según su nombre.
 
+    /**
+     * El método obtenerPrecioDelProducto(String nombreProducto) recupera el
+     * precio de un producto según su nombre.
+     *
+     * @param nombreProducto El nombre del producto del cual se desea obtener el
+     * precio.
+     * @return El precio del producto o 0.0 si no se encuentra.
+     * @see Consultas
+     */
     private double obtenerPrecioDelProducto(String nombreProducto) {
         Consultas consultas = new Consultas(); // Crea una instancia de la clase Consultas
         ArrayList<Productos> listaProductos = consultas.getProductos(); // Obtén la lista de productos
@@ -126,6 +154,12 @@ public class frmTiendaF1 extends javax.swing.JFrame {
         return 0.0;
     }
 
+    /**
+     * El método cargarProductosEnComboBox() llena un JComboBox con los nombres
+     * de los productos.
+     *
+     * @see Consultas
+     */
     private void cargarProductosEnComboBox() {
         Consultas consultas = new Consultas(); // Crear una instancia de la clase Consultas
 
@@ -252,6 +286,9 @@ public class frmTiendaF1 extends javax.swing.JFrame {
         tblProductos.addContainerListener(new java.awt.event.ContainerAdapter() {
             public void componentAdded(java.awt.event.ContainerEvent evt) {
                 tblProductosComponentAdded(evt);
+            }
+            public void componentRemoved(java.awt.event.ContainerEvent evt) {
+                tblProductosComponentRemoved(evt);
             }
         });
         jScrollPane1.setViewportView(tblProductos);
@@ -412,7 +449,15 @@ public class frmTiendaF1 extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    /**
+     * El método `cboProductoActionPerformed` se activa cuando se selecciona un
+     * producto en el JComboBox. Calcula y muestra el importe, el IVA y el total
+     * de la compra en etiquetas en función del producto seleccionado, la
+     * cantidad ingresada y el precio del producto.
+     *
+     * @param evt El evento de acción que desencadena este método.
+     * @see obtenerPrecioDelProducto
+     */
     private void cboProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboProductoActionPerformed
         int selectedIndex = cboProducto.getSelectedIndex(); // Obtiene el índice seleccionado
 
@@ -451,10 +496,16 @@ public class frmTiendaF1 extends javax.swing.JFrame {
             spnCantidad.setValue(0);
 
         }
-
-
     }//GEN-LAST:event_cboProductoActionPerformed
-
+    /**
+     * El método spnCantidadStateChanged(javax.swing.event.ChangeEvent evt) se
+     * activa cuando cambia el valor del JSpinner de cantidad; Calcula y muestra
+     * el precio, el importe, el IVA y el total de la compra en etiquetas en
+     * función del producto seleccionado y la cantidad ingresada.
+     *
+     * @param evt El evento de cambio de estado que desencadena este método.
+     * @see obtenerPrecioDelProducto
+     */
     private void spnCantidadStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spnCantidadStateChanged
 
         int selectedIndex = cboProducto.getSelectedIndex(); // Obtiene el índice seleccionado
@@ -501,12 +552,32 @@ public class frmTiendaF1 extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_spnCantidadStateChanged
-
+    /**
+     * El método `btnRegresarActionPerformed` se activa cuando se presiona el
+     * botón "Regresar"; Crea una instancia de la clase `frmLogin` (ventana de
+     * inicio de sesión), la hace visible y oculta la ventana actual
+     * (`frmTiendaF1`).
+     *
+     * @param evt El evento de acción que desencadena este método.
+     * @see frmLogin
+     */
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         frmLogin login = new frmLogin();
         login.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegresarActionPerformed
+    /**
+     * El método `obtenerIDProductoPorNombre` se utiliza para obtener el
+     * ID_Producto de un producto dado su nombre; Itera a través de una lista de
+     * productos y busca el producto por su nombre, devolviendo su ID_Producto
+     * si se encuentra.
+     *
+     * @param nombreProducto El nombre del producto del cual se desea obtener el
+     * ID_Producto.
+     * @return El ID_Producto del producto o -1 si no se encuentra.
+     * @see Consultas
+     * @see Productos
+     */
     private int obtenerIDProductoPorNombre(String nombreProducto) {
         Consultas consultas = new Consultas(); // Crea una instancia de la clase Consultas
         ArrayList<Productos> listaProductos = consultas.getProductos(); // Obtén la lista de productos
@@ -522,6 +593,19 @@ public class frmTiendaF1 extends javax.swing.JFrame {
         return -1;
     }
 
+    /**
+     * El método `btnAgregarActionPerformed` se activa cuando se presiona el
+     * botón "Agregar al carrito"; Calcula el importe de un producto en función
+     * del producto seleccionado, la cantidad ingresada y el precio del
+     * producto, formatea los valores y los muestra en etiquetas; También
+     * registra el producto en el carrito y actualiza la tabla.
+     *
+     * @param evt El evento de acción que desencadena este método.
+     * @see obtenerIDProductoPorNombre
+     * @see obtenerPrecioDelProducto
+     * @see mostrar
+     * @see Consultas
+     */
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         int selectedIndex = cboProducto.getSelectedIndex(); // Obtiene el índice seleccionado
 
@@ -558,20 +642,108 @@ public class frmTiendaF1 extends javax.swing.JFrame {
 
             mostrar();
         }
-
-
     }//GEN-LAST:event_btnAgregarActionPerformed
-
+    /**
+     * Este botón no funciona.
+     *
+     * @param evt El evento de acción que desencadena este método.
+     */
     private void botonConfirmarCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonConfirmarCompraActionPerformed
-//        System.out.println("Hola Mundo");
+//
+//        // Obtén el ID del producto seleccionado del JComboBox.
+//        int selectedProductID = cboProducto.getSelectedIndex(); // Asumiendo que los IDs son los índices.
+//
+//        // Obtén la cantidad ingresada por el usuario desde un Jspinner.
+//        int selectedQuantity = (int) spnCantidad.getValue();
+//
+//        if (selectedProductID >= 0 && selectedQuantity > 0) {
+//            // Crear un modelo de tabla si aún no lo has hecho.
+//            DefaultTableModel tableModel = new DefaultTableModel();
+//            if (selectedProductID >= 0 && selectedQuantity > 0) {
+//
+//                // Si ya tienes datos en la tabla, puedes obtenerlos y agregarlos al modelo existente.
+//                if (tblProductos.getModel() instanceof DefaultTableModel) {
+//                    tableModel = (DefaultTableModel) tblProductos.getModel();
+//                } else {
+//                    // Si la tabla aún no tiene un modelo, asigna el nuevo modelo.
+//                    // Agregar las columnas a la tabla
+//                    tableModel.addColumn("ID Producto");
+//                    tableModel.addColumn("Nombre Producto");
+//                    tableModel.addColumn("Descripción");
+//                    tableModel.addColumn("Cantidad Productos");
+//                    tableModel.addColumn("Precio");
+//                }
+//
+//                // Ahora, puedes agregar la fila correspondiente al producto seleccionado y la cantidad ingresada.
+//                // Debes realizar una consulta para obtener los datos del producto desde la base de datos.
+//                try {
+//                    Conexion con = new Conexion();
+//                    Connection conexion = con.getConexion();
+//                    Statement statement = conexion.createStatement();
+//
+//                    String query = "SELECT p.ID_Producto, p.NombreProducto, p.Descripcion, c.cantidadProductos, c.importe "
+//                            + "FROM productos p "
+//                            + "JOIN tienecarrito c ON p.ID_Producto = c.ID_Producto "
+//                            + "WHERE p.ID_Producto = " + selectedProductID;
+//                    ResultSet resultSet = statement.executeQuery(query);
+//
+//                    if (resultSet.next()) {
+//                        Object[] row = {
+//                            selectedProductID,
+//                            resultSet.getString("NombreProducto"),
+//                            resultSet.getString("Descripcion"),
+//                            selectedQuantity, // Usar la cantidad ingresada en lugar de la de la base de datos.
+//                            resultSet.getDouble("importe")
+//                        };
+//                        tableModel.insertRow(0, row);
+//                    } else {
+//                        // Si no se encontraron registros, puedes mostrar un mensaje o realizar alguna otra acción.
+//                        JOptionPane.showMessageDialog(this, "No se encontraron registros para el producto seleccionado.", "Error", JOptionPane.ERROR_MESSAGE);
+//                    }
+//
+//                } catch (SQLException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                // Crear una nueva tabla y asignarle el modelo de datos
+//                JTable nuevaTabla = new JTable(tableModel);
+//
+//                // Luego, puedes agregar esta nueva tabla a un panel o un frame según tus necesidades.
+//                // Por ejemplo, si estás usando un JFrame, puedes hacer algo como esto:
+//                JFrame frame = new JFrame("Nueva Tabla");
+//                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//                frame.add(new JScrollPane(nuevaTabla)); // Agregar la tabla a un JScrollPane
+//                frame.pack();
+//                frame.setVisible(true);
+//            }
+//        }
     }//GEN-LAST:event_botonConfirmarCompraActionPerformed
-
+    /**
+     * Componente sin utilizar.
+     *
+     * @param evt El evento de acción que desencadena este método.
+     */
     private void tblProductosComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_tblProductosComponentAdded
         // TODO add your handling code here:
     }//GEN-LAST:event_tblProductosComponentAdded
+    /**
+     * Componente sin utilizar.
+     *
+     * @param evt El evento de acción que desencadena este método.
+     */
+    private void tblProductosComponentRemoved(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_tblProductosComponentRemoved
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblProductosComponentRemoved
 
     /**
-     * @param args the command line arguments
+     * El método `main` es el punto de entrada principal del programa;
+     * Inicializa la aplicación, configura el aspecto y comportamiento de la
+     * interfaz de usuario, y muestra la ventana principal de la tienda Merch
+     * Fórmula 1.
+     *
+     * @param args Los argumentos de línea de comandos (no se utilizan en este
+     * caso).
+     * @see frmTiendaF1
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

@@ -1,6 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+/**
+ * La clase Consultas.java se encarga de realizar consultas y operaciones 
+ * relacionadas con la autenticación y registro de clientes en la base de datos;
+ * 
+ * Fecha de terminación y ult. versión: 24 de Septiembre de 2023, 23:30 hrs.
  */
 package controlador;
 
@@ -17,15 +19,27 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author YeisiPC
+ * @author(s) Jesús Yalam Guzmán Villa 233350, 
+ * Daniel Alejandro Castro Félix 235294, 
+ * José Carlos Alcalá Ruíz 180872, 
+ * Fernando Tadeo Zayas Bernal 228310.
  */
 public class Consultas extends Conexion {
 
+    /**
+     * Constructor de la clase `Consultas`. Crea una instancia de la clase y establece una conexión a la base de datos.
+     */
     public Consultas() {
     }
     Conexion conex = new Conexion();
 
+    /**
+     * Autentica a un usuario utilizando su dirección de correo electrónico y contraseña.
+     *
+     * @param CorreoElectronico La dirección de correo electrónico del usuario.
+     * @param Contraseña La contraseña del usuario.
+     * @return true si la autenticación es exitosa, false en caso contrario.
+     */
     public boolean autenticacion(String CorreoElectronico, String Contraseña) {
         PreparedStatement pst = null;
         ResultSet rs = null;
@@ -65,6 +79,14 @@ public class Consultas extends Conexion {
 
     }
 
+    /**
+     * Registra a un nuevo cliente en la base de datos.
+     *
+     * @param Nombre_ApellidoP_ApellidoM El nombre y apellidos del nuevo cliente.
+     * @param CorreoElectronico La dirección de correo electrónico del nuevo cliente.
+     * @param Contraseña La contraseña del nuevo cliente.
+     * @return true si el registro es exitoso, false en caso contrario.
+     */
     public boolean registrar(String Nombre_ApellidoP_ApellidoM, String CorreoElectronico, String Contraseña) {
         PreparedStatement pst = null;
         try {
@@ -96,6 +118,13 @@ public class Consultas extends Conexion {
         return false;
     }
 
+    /**
+     * Elimina a un cliente de la base de datos.
+     *
+     * @param Nombre_ApellidoP_ApellidoM El nombre y apellidos del cliente a eliminar.
+     * @param Contraseña La contraseña del cliente a eliminar.
+     * @return true si la eliminación es exitosa, false en caso contrario.
+     */
     public boolean eliminar(String Nombre_ApellidoP_ApellidoM, String Contraseña) {
         PreparedStatement pst = null;
 
@@ -186,6 +215,12 @@ public class Consultas extends Conexion {
         return false;
     }
 
+    /**
+     * Obtiene una lista de productos desde la base de datos y los almacena en
+     * un ArrayList.
+     *
+     * @return Una lista de productos como objetos Productos.
+     */
     public ArrayList<Productos> getProductos() {
         Conexion con = new Conexion(); // Crear una instancia de la clase Conexion
         Connection conexion = con.getConexion(); // Obtener la conexión a la base de datos
@@ -235,6 +270,13 @@ public class Consultas extends Conexion {
         return listaProductos;
     }
 
+    /**
+     * Inserta una compra en la tabla TieneCarrito.
+     *
+     * @param compraID El identificador de la compra.
+     * @param productoID El identificador del producto comprado.
+     * @return true si la inserción fue exitosa, false en caso contrario.
+     */
     public boolean insertarCompraEnTieneCarrito(int compraID, int productoID) {
         try (Connection conexion = getConexion(); PreparedStatement statement = conexion.prepareStatement("INSERT INTO TieneCarrito (Estado, CompraID, ID_Producto) VALUES (?, ?, ?)")) {
 
@@ -254,6 +296,15 @@ public class Consultas extends Conexion {
     }
 // Función para insertar un registro en la tabla TieneCarrito
 
+    /**
+     * Inserta un registro en la tabla TieneCarrito para representar un producto
+     * en el carrito de un cliente.
+     *
+     * @param clienteID El identificador del cliente.
+     * @param productoID El identificador del producto.
+     * @param cantidad La cantidad de productos en el carrito.
+     * @return true si la inserción fue exitosa, false en caso contrario.
+     */
     private boolean insertarEnTieneCarrito(int clienteID, int productoID, int cantidad) {
         String estado = "Agregado"; // Definir el estado apropiado
 
@@ -282,7 +333,16 @@ public class Consultas extends Conexion {
         }
 
     }
-    
+
+    /**
+     * Registra un carrito en la base de datos.
+     *
+     * @param ID_Producto El identificador del producto en el carrito.
+     * @param cantidadProductos La cantidad de productos en el carrito.
+     * @param importe El importe total de la compra en formato de cadena.
+     * @return true si el registro del carrito fue exitoso, false en caso
+     * contrario.
+     */
     public boolean registrarCarrito(int ID_Producto, int cantidadProductos, String importe) {
         PreparedStatement pst = null;
         try {
@@ -313,7 +373,21 @@ public class Consultas extends Conexion {
         }
         return false;
     }
-    public boolean registrarCompra(int idCliente, int idCarrito, String montoTotal){
+
+    /**
+     * Registra una compra en la base de datos.
+     *
+     * @param idCliente El identificador del cliente que realizó la compra.
+     * @param idCarrito El identificador del carrito de compras asociado a la
+     * compra.
+     * @param montoTotal El monto total de la compra en formato de cadena (puede
+     * contener decimales).
+     * @return true si la compra se registró exitosamente en la base de datos,
+     * false en caso contrario.
+     * @throws SQLException Si se produce un error al interactuar con la base de
+     * datos.
+     */
+    public boolean registrarCompra(int idCliente, int idCarrito, String montoTotal) {
         PreparedStatement pst = null;
         try {
             String consulta = "insert into compras(ID_cliente, idCarrito, montoTotal) values(?,?,?)";
@@ -326,7 +400,7 @@ public class Consultas extends Conexion {
                 return true;
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error en " + e);
         } finally {
             try {
@@ -335,8 +409,8 @@ public class Consultas extends Conexion {
                 }
                 if (pst != null) {
                     pst.close();
-                };
-            } catch (Exception e) {
+                }
+            } catch (SQLException e) {
                 System.out.println("Error en " + e);
             }
 

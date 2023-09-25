@@ -1,20 +1,24 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+/**
+ * Este frame frmLogin.java es el iniciar sesión o "login"
+ * y menú principal del proyecto;
+ *
+ * Fecha de terminación y ult. versión: 24 de Septiembre de 2023, 23:30 hrs.
  */
 package interfaz;
 
 import controlador.Consultas;
 
 /**
- *
- * @author TADEO
- * Esta clase es el login y menú principal del proyecto.
+ * @author(s) Jesús Yalam Guzmán Villa 233350, 
+ * Daniel Alejandro Castro Félix 235294, 
+ * José Carlos Alcalá Ruíz 180872, 
+ * Fernando Tadeo Zayas Bernal 228310.
  */
 public class frmLogin extends javax.swing.JFrame {
 
     /**
-     * Creates new form frmLogin
+     * Crea el formulario o frame de iniciar sesión, también le establece un
+     * título.
      */
     public frmLogin() {
         initComponents();
@@ -144,34 +148,42 @@ public class frmLogin extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private boolean autenticarCampos(){
-        if (campotxtCorreo.getText().isBlank()||campotxtContraseña.getText().isBlank()) {
+    /**
+     * Verifica si los campos de correo y contraseña no están en blanco.
+     *
+     * @return true si los campos de correo y contraseña no están en blanco,
+     * false en caso contrario.
+     */
+    private boolean autenticarCampos() {
+        if (campotxtCorreo.getText().isBlank() || campotxtContraseña.getText().isBlank()) {
             return false;
-        }else{            
+        } else {
             return true;
         }
-        
+
     }
+
     /**
      * Este botón autentica al usuario para iniciar sesión.
+     *
      * @param evt autentica al usuario e inicia sesión.
      */
     private void btnIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSesionActionPerformed
         if (autenticarCampos()) {
             Consultas sql = new Consultas();
             sql.autenticacion(campotxtCorreo.getText(), campotxtContraseña.getText());
-            frmTiendaF1 f1=new frmTiendaF1();
+            frmTiendaF1 f1 = new frmTiendaF1();
             this.setVisible(false);
             f1.setVisible(true);
         }
-        
-        
+
+
     }//GEN-LAST:event_btnIniciarSesionActionPerformed
 
     /**
-     * Este botón activa el frame de registrar usuario, donde se piden los
-     * datos necesarios para añadir a un usuario a la base de datos del sistema.
+     * Este botón activa el frame de registrar usuario, donde se piden los datos
+     * necesarios para añadir a un usuario a la base de datos del sistema.
+     *
      * @param evt registra al usuario y vuelve al menú principal.
      */
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
@@ -181,8 +193,9 @@ public class frmLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
     /**
-     * Este botón activa el frame de actualizar usuario, donde pide datos
-     * de identificación para después actualizar los datos de un usuario.
+     * Este botón activa el frame de actualizar usuario, donde pide datos de
+     * identificación para después actualizar los datos de un usuario.
+     *
      * @param evt actualiza al usuario y vuelve al menú principal.
      */
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
@@ -194,6 +207,7 @@ public class frmLogin extends javax.swing.JFrame {
     /**
      * Este botón activa el frame de eliminar usuario donde pide los datos del
      * usuario para después eliminarlo.
+     *
      * @param evt elimina al usuario y vuelve al menú principal.
      */
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
