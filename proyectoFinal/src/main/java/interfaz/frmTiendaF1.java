@@ -563,7 +563,7 @@ public class frmTiendaF1 extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void botonConfirmarCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonConfirmarCompraActionPerformed
-
+//        System.out.println("Hola Mundo");
     }//GEN-LAST:event_botonConfirmarCompraActionPerformed
 
     private void tblProductosComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_tblProductosComponentAdded
