@@ -19,10 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author(s) Jesús Yalam Guzmán Villa 233350, 
- * Daniel Alejandro Castro Félix 235294, 
- * José Carlos Alcalá Ruíz 180872, 
- * Fernando Tadeo Zayas Bernal 228310.
+ * @author(s) Jesús Yalam Guzmán Villa 233350
  */
 public class Consultas extends Conexion {
 

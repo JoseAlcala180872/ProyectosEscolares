@@ -8,7 +8,7 @@ import controlador.Consultas;
 
 /**
  *
- * @author TADEO
+ * @author Yalam
  * Está clase es el frame para eliminar usuario.
  */
 public class frmEliminar extends javax.swing.JFrame {

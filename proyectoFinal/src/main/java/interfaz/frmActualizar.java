@@ -7,8 +7,7 @@ package interfaz;
 import controlador.Consultas;
 
 /**
- *
- * @author TADEO
+ * Yalam
  * Esta clase es el frame para actualizar el usuario
  */
 public class frmActualizar extends javax.swing.JFrame {
