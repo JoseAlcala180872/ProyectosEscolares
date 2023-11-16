@@ -12,14 +12,12 @@ import java.sql.SQLException;
 
 /**
  * @author(s) Jesús Yalam Guzmán Villa 233350, 
- * Daniel Alejandro Castro Félix 235294, 
- * José Carlos Alcalá Ruíz 180872, 
- * Fernando Tadeo Zayas Bernal 228310.
+
  */
 public class Conexion {
 
     private String USERNAME = "root";
-    private String PASSWORD = "13137Cas";
+    private String PASSWORD = "12345";
     private String HOST = "localhost";
     private String PORT = "3306";
     private String DATABASE = "tienda";

@@ -11,9 +11,6 @@ import controlador.Consultas;
 import interfaz.frmLogin;
 /**
  * @author(s) Jesús Yalam Guzmán Villa 233350, 
- * Daniel Alejandro Castro Félix 235294, 
- * José Carlos Alcalá Ruíz 180872, 
- * Fernando Tadeo Zayas Bernal 228310.
  */
 public class ProyectoFinal {
 
